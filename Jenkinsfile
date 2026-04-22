@@ -1,26 +1,31 @@
 pipeline {
     agent any
+
     tools {
-        jdk 'JDK17'     // Ensure this matches "Manage Jenkins > Tools"
-        maven 'Maven3'  // Ensure this matches "Manage Jenkins > Tools"
+        // These names MUST match Manage Jenkins -> Tools exactly
+        jdk 'JDK17'     
+        maven 'Maven3'  
     }
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
+
         stage('Build & Test') {
             steps {
-                // Use 'bat' for Windows, 'sh' is only for Linux
+                // Use 'bat' for Windows Command Prompt
                 bat 'mvn clean test'
             }
         }
     }
+
     post {
         always {
-            // This records the results even if the build fails
-            junit '**/target/surefire-reports/*.xml'
+            // allowEmptyResults prevents the "Configuration error" if tests didn't run
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
         }
     }
 }
