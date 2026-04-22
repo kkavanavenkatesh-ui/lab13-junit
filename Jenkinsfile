@@ -1,30 +1,25 @@
 pipeline {
     agent any
-
     tools {
-        jdk 'JDK17'     // Must match the name in Manage Jenkins -> Tools
-        maven 'Maven3'  // Must match the name in Manage Jenkins -> Tools
+        jdk 'JDK17'     // Ensure this matches "Manage Jenkins > Tools"
+        maven 'Maven3'  // Ensure this matches "Manage Jenkins > Tools"
     }
-
     stages {
         stage('Checkout') {
             steps {
-                // This pulls code from the Git repo configured in the Job
                 checkout scm
             }
         }
-
         stage('Build & Test') {
             steps {
-                // Runs the tests and generates XML reports
-                sh 'mvn clean test' 
+                // Use 'bat' for Windows, 'sh' is only for Linux
+                bat 'mvn clean test'
             }
         }
     }
-
     post {
         always {
-            // Tells Jenkins where to find the XML results to build the graph
+            // This records the results even if the build fails
             junit '**/target/surefire-reports/*.xml'
         }
     }
