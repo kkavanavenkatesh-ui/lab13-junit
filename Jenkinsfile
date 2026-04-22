@@ -17,7 +17,7 @@ pipeline {
         stage('Build & Test') {
             steps {
                 // Runs the tests and generates XML reports
-                sh 'mvn clean test' 
+                bat 'mvn clean test' 
             }
         }
     }
